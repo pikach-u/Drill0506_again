@@ -13,7 +13,6 @@ def load_resources():
     character = load_image('animation_sheet.png')
 
 
-
 def handle_events():
     global running
     events = get_events()
@@ -38,10 +37,16 @@ def reset_world():
     frame = 0
     action = 3
 
-    sx, sy = cx, cy # p1 : 시작점
+    set_new_target_arrow()
+
+
+def set_new_target_arrow():
+    global sx, sy, hx, hy, t
+    sx, sy = cx, cy  # p1 : 시작점
     # hx, hy = 50, 50
-    hx, hy = random.randint(0, TUK_WIDTH), random.randint(0, TUK_HEIGHT) # p2 : 끝점
-    t= 0.0
+    hx, hy = random.randint(0, TUK_WIDTH), random.randint(0, TUK_HEIGHT)  # p2 : 끝점
+    t = 0.0
+
 
 def render_world():  # refactor->extract method
     clear_canvas()
@@ -58,12 +63,15 @@ def update_world():  # refactor
     global action
 
     frame = (frame + 1) % 8
-    action = 1 if cx < hx else 0 #목적지가 소년의 현재 위치보다 오른쪽이라면 1
+    action = 1 if cx < hx else 0  # 목적지가 소년의 현재 위치보다 오른쪽이라면 1
 
-    if t <= 1.0 :
-        cx = (1-t) * sx + t * hx # cx는 시작 x와 끝 x를 1-t:t의 비율로 섞은 위치
-        cy = (1-t) * sy + t * hy
+    if t <= 1.0:
+        cx = (1 - t) * sx + t * hx  # cx는 시작 x와 끝 x를 1-t:t의 비율로 섞은 위치
+        cy = (1 - t) * sy + t * hy
         t += 0.001
+    else:
+        cx, cy = hx, hy #캐릭터 위치를 목적지 위치와 정확히 일치시킴. 위치를 보장할 수 없는 경우가 있기 때문에.
+        set_new_target_arrow()
 
 
 open_canvas(TUK_WIDTH, TUK_HEIGHT)
