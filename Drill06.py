@@ -75,7 +75,7 @@ def render_world():  # refactor->extract method
     arrow.draw(mx, my)
     character.clip_draw(frame * 100, 100 * action, 100, 100, cx, cy)
     update_canvas()
-
+    # delay(0.05)
 
 def update_world():  # refactor
     global frame
@@ -93,7 +93,8 @@ def update_world():  # refactor
             cx, cy = hx, hy #캐릭터 위치를 목적지 위치와 정확히 일치시킴. 위치를 보장할 수 없는 경우가 있기 때문에.
             del points[0] #목표 지점에 도착했기 때문에, 필요없는 점을 삭제
             set_new_target_arrow()
-
+    elif points:    #타겟이 존재하지 않는 상황에서 point list에 새로운 목표 지점이 생기면
+        set_new_target_arrow()
 
 open_canvas(TUK_WIDTH, TUK_HEIGHT)
 hide_cursor()
@@ -105,6 +106,6 @@ while running:
     handle_events()  # 사용자 입력을 받아들인다.
     update_world()  # 월드 안의 객체들의 상호작용을 계산하고 결과를 update한다.
 
-    delay(0.05)
+
 
 close_canvas()
