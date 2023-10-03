@@ -70,7 +70,7 @@ def update_world():  # refactor
         cy = (1 - t) * sy + t * hy
         t += 0.001
     else:
-        cx, cy = hx, hy #캐릭터 위치를 목적지 위치와 정확히 일치시킴. 위치를 보장할 수 없는 경우가 있기 때문에.
+        cx, cy = hx, hy  # 캐릭터 위치를 목적지 위치와 정확히 일치시킴. 위치를 보장할 수 없는 경우가 있기 때문에.
         set_new_target_arrow()
 
 
