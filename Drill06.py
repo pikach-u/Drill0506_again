@@ -48,13 +48,20 @@ def set_new_target_arrow():
     global sx, sy, hx, hy, t
     global action
     global frame
+    global target_exists
 
-    sx, sy = cx, cy  # p1 : 시작점
-    # hx, hy = 50, 50
-    hx, hy = points[0]  # p2 : 끝점
-    t = 0.0
-    action = 1 if cx < hx else 0  # 목적지가 소년의 현재 위치보다 오른쪽이라면 1
-    frame = 0
+    if points: #if len(points) > 0 : list에 뭔가 들어있으면, True
+        sx, sy = cx, cy  # p1 : 시작점
+        # hx, hy = 50, 50
+        hx, hy = points[0]  # p2 : 끝점
+        t = 0.0
+        action = 1 if cx < hx else 0  # 목적지가 소년의 현재 위치보다 오른쪽이라면 1
+        frame = 0
+        target_exists = True
+    else:
+        action = 3 if action == 1 else 2 #이전에 소년이 이동한 방향으로 IDLE 애니메이션 재생
+        frame = 0
+        target_exists = False
 
 
 def render_world():  # refactor->extract method
@@ -73,13 +80,15 @@ def update_world():  # refactor
 
     frame = (frame + 1) % 8
 
-    if t <= 1.0:
-        cx = (1 - t) * sx + t * hx  # cx는 시작 x와 끝 x를 1-t:t의 비율로 섞은 위치
-        cy = (1 - t) * sy + t * hy
-        t += 0.001
-    else:
-        cx, cy = hx, hy #캐릭터 위치를 목적지 위치와 정확히 일치시킴. 위치를 보장할 수 없는 경우가 있기 때문에.
-        set_new_target_arrow()
+    if target_exists:
+        if t <= 1.0:
+            cx = (1 - t) * sx + t * hx  # cx는 시작 x와 끝 x를 1-t:t의 비율로 섞은 위치
+            cy = (1 - t) * sy + t * hy
+            t += 0.001
+        else:   #목표 지점에 도달하면
+            cx, cy = hx, hy #캐릭터 위치를 목적지 위치와 정확히 일치시킴. 위치를 보장할 수 없는 경우가 있기 때문에.
+            del points[0] #목표 지점에 도착했기 때문에, 필요없는 점을 삭제
+            set_new_target_arrow()
 
 
 open_canvas(TUK_WIDTH, TUK_HEIGHT)
